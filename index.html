@@ -1121,8 +1121,8 @@ cube.prototype.move=function(){
     }
     if(this.mode==="roll"){
         this.xr+=30/this.size;
-        this.xs=cos(this.yr+90)*0.5;
-        this.zs=sin(this.yr+90)*0.5;
+        this.xs=cos(radians(this.yr+90))*0.5;
+        this.zs=sin(radians(this.yr+90))*0.5;
         var e0=[0+sin(radians(-this.xr-45))*this.size*sqrt(2),0+cos(radians(-this.xr-45))*this.size*sqrt(2),0];
         var e1=[0+sin(radians(-this.xr+45))*this.size*sqrt(2),0+cos(radians(-this.xr+45))*this.size*sqrt(2),1];
         var e2=[0+sin(radians(-this.xr+135))*this.size*sqrt(2),0+cos(radians(-this.xr+135))*this.size*sqrt(2),2];
