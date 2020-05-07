@@ -462,6 +462,36 @@ PConstants:d,PShape:Q,XMLElement:r,colors:k.colors}),d=k.defaultScope({ArrayList
         frameRate(50);
         scale(1);
         
+      
+var dayColor=color(255);
+var dayCubeColor=color(0, 255, 0);
+var dayLight=color(255);
+var dayParticleColor=dayCubeColor;
+var dayCrystalColor=color(0,255,150);
+var daySparkColor=color(255,255,255);
+
+
+var nightSkyColor=color(0, 74, 184);
+var nightGroundColor=color(0, 28, 71);
+var nightCubeColor=color(0,162,255);
+var nightLight=color(209, 237, 255);
+var nightParticleColor=color(76, 192, 255);
+var nightCrystalColor=color(76, 191, 181);
+var nightSparkColor=color(150,255,0);
+
+var sc=color(0, 28, 71);
+var gc=color(0, 13, 33);
+var cc=color(0, 60, 74);
+var crc=color(0,0,0);
+var lt=color(0, 99, 156);
+var pc=color(0,255,0);
+var spc=color(150,255,0,0);
+var cursorColor=color(0,255,255);
+
+var TIMER=-3600;
+
+
+var firstFrame=true;
 
 var testing=false;
 
@@ -569,10 +599,22 @@ var opposite=function(num){
 var particle=function(x,y,z,c){
     if(z>0){
     noStroke();
-    fill(c[0],c[1],c[2],255-z/2);
+    fill(c,255-z/2);
     rect((x-1)/pow(z,1/3)*20,(y-1)/pow(z,1/3)*20,2/pow(z,1/3)*20,2/pow(z,1/3)*20);
     }
 };
+
+var Cursor=function(){
+    particle(mouseX/2-150,150,-mouseY+700,color(0,255,255));
+    
+    if(-mouseY+700>0){
+    noStroke();
+    fill(150,255,0,255-(mouseY+700)/2);
+    rect((mouseX/2-150-1)/pow((mouseY+700),1/3)*20,(149)/pow((mouseY+700),1/3)*20,2/pow((mouseY+700),1/3)*20,2/pow((mouseY+700),1/3)*20);
+    }
+};
+
+//particle(0,0,400,Grass);
 
 var connection=function(x1,y1,z1,x2,y2,z2){
     var vx1=x1/pow(z1,1/3)*20;
@@ -602,8 +644,8 @@ var face=function(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4){
     var Z=(z1+z2+z3+z4)/4;
     noStroke();
     quad(vx1,vy1,vx2,vy2,vx3,vy3,vx4,vy4);
-    fill(255,255,255,Z/2);
-    stroke(255,255,255,Z/4);
+    fill(sc,Z/2);
+    stroke(255,255,255,0);
     strokeWeight(1);
     quad(vx1,vy1,vx2,vy2,vx3,vy3,vx4,vy4);
 };
@@ -650,7 +692,7 @@ var cube=function(x,y,z,size,type,xs,ys,zs){
         this.zs=zs;
         this.ys=ys;
         this.mode="wander";
-    }else if(this.type==="particle"){
+    }else if(this.type==="particle"||this.type==="spark"){
         this.x=x;
         this.y=y;
         this.z=z;
@@ -700,6 +742,14 @@ cube.prototype.show=function(){
     ///RotateY3D
     var sinTheta = sin(radians(this.yr));
     var cosTheta = cos(radians(this.yr));
+    
+    if(this.r===undefined){
+        sinTheta = sin(radians(this.yr);
+        cosTheta = cos(radians(this.yr);
+    }else{
+        sinTheta = sin(radians(this.yr+this.r));
+        cosTheta = cos(radians(this.yr+this.r));
+    }
     
     for (var n=0; n<points.length; n++) {
         var Point = points[n];
@@ -754,55 +804,55 @@ cube.prototype.show=function(){
         var d5=Dist(P5[0],P5[1],P5[2],0,0,0);
         var d6=Dist(P6[0],P6[1],P6[2],0,0,0);
         
-        fill(C(this.color));
+        fill(cc);
         face(P7[0],P7[1],P7[2],P4[0],P4[1],P4[2],P2[0],P2[1],P2[2],P6[0],P6[1],P6[2]);
-        fill(C(this.color));
+        fill(cc);
         face(P7[0],P7[1],P7[2],P5[0],P5[1],P5[2],P3[0],P3[1],P3[2],P4[0],P4[1],P4[2]);
-        fill(C(this.color));
+        fill(cc);
         face(P7[0],P7[1],P7[2],P6[0],P6[1],P6[2],P1[0],P1[1],P1[2],P5[0],P5[1],P5[2]);
         
         if(d6>=d4&&d6>=d5){
-            fill(C(this.color));
+            fill(cc);
             face(P0[0],P0[1],P0[2],P1[0],P1[1],P1[2],P6[0],P6[1],P6[2],P2[0],P2[1],P2[2]);
         if(d4>=d5){
-            fill(LC(this.color,White,(d6-d4)/this.size/3));
+            fill(lerpColor(cc,lt,(d6-d4)/this.size/3));
             face(P0[0],P0[1],P0[2],P2[0],P2[1],P2[2],P4[0],P4[1],P4[2],P3[0],P3[1],P3[2]);
-            fill(LC(this.color,White,(d6-d5)/this.size/3));
+            fill(lerpColor(cc,lt,(d6-d5)/this.size/3));
             face(P0[0],P0[1],P0[2],P3[0],P3[1],P3[2],P5[0],P5[1],P5[2],P1[0],P1[1],P1[2]);
         }else{
-            fill(LC(this.color,White,(d6-d5)/this.size/3));
+            fill(lerpColor(cc,lt,(d6-d5)/this.size/3));
             face(P0[0],P0[1],P0[2],P3[0],P3[1],P3[2],P5[0],P5[1],P5[2],P1[0],P1[1],P1[2]);
-            fill(LC(this.color,White,(d6-d4)/this.size/3));
+            fill(lerpColor(cc,lt,(d6-d4)/this.size/3));
             face(P0[0],P0[1],P0[2],P2[0],P2[1],P2[2],P4[0],P4[1],P4[2],P3[0],P3[1],P3[2]);
         }
         }
         if(d4>=d5&&d4>=d6){
-            fill(C(this.color));
+            fill(cc);
             face(P0[0],P0[1],P0[2],P2[0],P2[1],P2[2],P4[0],P4[1],P4[2],P3[0],P3[1],P3[2]);
             if(d5>=d6){
-                fill(LC(this.color,White,(d4-d5)/this.size/3));
+                fill(lerpColor(cc,lt,(d4-d5)/this.size/3));
                 face(P0[0],P0[1],P0[2],P3[0],P3[1],P3[2],P5[0],P5[1],P5[2],P1[0],P1[1],P1[2]);
-                fill(LC(this.color,White,(d4-d6)/this.size/3));
+                fill(lerpColor(cc,lt,(d4-d6)/this.size/3));
                 face(P0[0],P0[1],P0[2],P1[0],P1[1],P1[2],P6[0],P6[1],P6[2],P2[0],P2[1],P2[2]);
             }else{
-                fill(LC(this.color,White,(d4-d6)/this.size/3));
+                fill(lerpColor(cc,lt,(d4-d6)/this.size/3));
                 face(P0[0],P0[1],P0[2],P1[0],P1[1],P1[2],P6[0],P6[1],P6[2],P2[0],P2[1],P2[2]);
-                fill(LC(this.color,White,(d4-d5)/this.size/3));
+                fill(lerpColor(cc,lt,(d4-d5)/this.size/3));
                 face(P0[0],P0[1],P0[2],P3[0],P3[1],P3[2],P5[0],P5[1],P5[2],P1[0],P1[1],P1[2]);
             }
         }
         if(d5>=d4&&d5>=d6){
-            fill(C(this.color));
+            fill(cc);
             face(P0[0],P0[1],P0[2],P3[0],P3[1],P3[2],P5[0],P5[1],P5[2],P1[0],P1[1],P1[2]);
             if(d4>=d6){
-                fill(LC(this.color,White,(d5-d4)/this.size/3));
+                fill(lerpColor(cc,lt,(d5-d4)/this.size/3));
                 face(P0[0],P0[1],P0[2],P2[0],P2[1],P2[2],P4[0],P4[1],P4[2],P3[0],P3[1],P3[2]);
-                fill(LC(this.color,White,(d5-d6)/this.size/3));
+                fill(lerpColor(cc,lt,(d5-d6)/this.size/3));
                 face(P0[0],P0[1],P0[2],P1[0],P1[1],P1[2],P6[0],P6[1],P6[2],P2[0],P2[1],P2[2]);
             }else{
-                fill(LC(this.color,White,(d5-d6)/this.size/3));
+                fill(lerpColor(cc,lt,(d5-d6)/this.size/3));
                 face(P0[0],P0[1],P0[2],P1[0],P1[1],P1[2],P6[0],P6[1],P6[2],P2[0],P2[1],P2[2]);
-                fill(LC(this.color,White,(d5-d4)/this.size/3));
+                fill(lerpColor(cc,lt,(d5-d4)/this.size/3));
                 face(P0[0],P0[1],P0[2],P2[0],P2[1],P2[2],P4[0],P4[1],P4[2],P3[0],P3[1],P3[2]);
             }
         }
@@ -843,16 +893,13 @@ cube.prototype.show=function(){
     var sinTheta = sin(radians(this.yr));
     var cosTheta = cos(radians(this.yr));
     
-    for (var n=0; n<points.length; n++) {
-        var Point = points[n];
-        var x = Point[0];
-        var z = Point[2];
-        Point[0] = x * cosTheta - z * sinTheta;
-        Point[2] = z * cosTheta + x * sinTheta;
+    if(this.r===undefined){
+        sinTheta = sin(radians(this.yr);
+        cosTheta = cos(radians(this.yr);
+    }else{
+        sinTheta = sin(radians(this.yr+this.r));
+        cosTheta = cos(radians(this.yr+this.r));
     }
-    
-    
-    
     //}
     //Rotation
     
@@ -892,56 +939,56 @@ cube.prototype.show=function(){
         var d5=Dist(P5[0],P5[1],P5[2],0,0,0);
         var d6=Dist(P6[0],P6[1],P6[2],0,0,0);
         
-        fill(C(Test));
+        fill(crc);
         face(P7[0],P7[1],P7[2],P4[0],P4[1],P4[2],P2[0],P2[1],P2[2],P6[0],P6[1],P6[2]);
-        fill(C(Test));
+        fill(crc);
         face(P7[0],P7[1],P7[2],P5[0],P5[1],P5[2],P3[0],P3[1],P3[2],P4[0],P4[1],P4[2]);
-        fill(C(Test));
+        fill(crc);
         face(P7[0],P7[1],P7[2],P6[0],P6[1],P6[2],P1[0],P1[1],P1[2],P5[0],P5[1],P5[2]);
         
         
         if(d6>=d4&&d6>=d5){
-            fill(C(Test));
+            fill(crc);
             face(P0[0],P0[1],P0[2],P1[0],P1[1],P1[2],P6[0],P6[1],P6[2],P2[0],P2[1],P2[2]);
         if(d4>=d5){
-            fill(LC(Test,White,(d6-d4)/this.size/3));
+            fill(lerpColor(crc,lt,(d6-d4)/this.size/3));
             face(P0[0],P0[1],P0[2],P2[0],P2[1],P2[2],P4[0],P4[1],P4[2],P3[0],P3[1],P3[2]);
-            fill(LC(Test,White,(d6-d5)/this.size/3));
+            fill(lerpColor(crc,lt,(d6-d5)/this.size/3));
             face(P0[0],P0[1],P0[2],P3[0],P3[1],P3[2],P5[0],P5[1],P5[2],P1[0],P1[1],P1[2]);
         }else{
-            fill(LC(Test,White,(d6-d5)/this.size/3));
+            fill(lerpColor(crc,lt,(d6-d5)/this.size/3));
             face(P0[0],P0[1],P0[2],P3[0],P3[1],P3[2],P5[0],P5[1],P5[2],P1[0],P1[1],P1[2]);
-            fill(LC(Test,White,(d6-d4)/this.size/3));
+            fill(lerpColor(crc,lt,(d6-d4)/this.size/3));
             face(P0[0],P0[1],P0[2],P2[0],P2[1],P2[2],P4[0],P4[1],P4[2],P3[0],P3[1],P3[2]);
         }
         }
         if(d4>=d5&&d4>=d6){
-            fill(C(Test));
+            fill(crc);
             face(P0[0],P0[1],P0[2],P2[0],P2[1],P2[2],P4[0],P4[1],P4[2],P3[0],P3[1],P3[2]);
             if(d5>=d6){
-                fill(LC(Test,White,(d4-d5)/this.size/3));
+                fill(lerpColor(crc,lt,(d4-d5)/this.size/3));
                 face(P0[0],P0[1],P0[2],P3[0],P3[1],P3[2],P5[0],P5[1],P5[2],P1[0],P1[1],P1[2]);
-                fill(LC(Test,White,(d4-d6)/this.size/3));
-                face(P0[0],P0[1],P0[2],P1[0],P1[1],P1[2],P6[0],P6[1],P6[2],P2[0],P2[1],P2[2]);
+                fill(lerpColor(crc,lt,(d4-d6)/this.size/3));
+                face(P0[0],P0[1],P0[2],P1[0],P1[1],P1[2],P6[0],P6[1],P6[2],P2[0],P2[1],P2[2]);///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             }else{
-                fill(LC(Test,White,(d4-d6)/this.size/3));
+                fill(lerpColor(crc,lt,(d4-d6)/this.size/3));
                 face(P0[0],P0[1],P0[2],P1[0],P1[1],P1[2],P6[0],P6[1],P6[2],P2[0],P2[1],P2[2]);
-                fill(LC(Test,White,(d4-d5)/this.size/3));
+                fill(lerpColor(crc,lt,(d4-d5)/this.size/3));
                 face(P0[0],P0[1],P0[2],P3[0],P3[1],P3[2],P5[0],P5[1],P5[2],P1[0],P1[1],P1[2]);
             }
         }
         if(d5>=d4&&d5>=d6){
-            fill(C(Test));
+            fill(crc);
             face(P0[0],P0[1],P0[2],P3[0],P3[1],P3[2],P5[0],P5[1],P5[2],P1[0],P1[1],P1[2]);
             if(d4>=d6){
-                fill(LC(Test,White,(d5-d4)/this.size/3));
+                fill(lerpColor(crc,lt,(d5-d4)/this.size/3));
                 face(P0[0],P0[1],P0[2],P2[0],P2[1],P2[2],P4[0],P4[1],P4[2],P3[0],P3[1],P3[2]);
-                fill(LC(Test,White,(d5-d6)/this.size/3));
+                fill(lerpColor(crc,lt,(d5-d6)/this.size/3));
                 face(P0[0],P0[1],P0[2],P1[0],P1[1],P1[2],P6[0],P6[1],P6[2],P2[0],P2[1],P2[2]);
             }else{
-                fill(LC(Test,White,(d5-d6)/this.size/3));
+                fill(lerpColor(crc,lt,(d5-d6)/this.size/3));
                 face(P0[0],P0[1],P0[2],P1[0],P1[1],P1[2],P6[0],P6[1],P6[2],P2[0],P2[1],P2[2]);
-                fill(LC(Test,White,(d5-d4)/this.size/3));
+                fill(lerpColor(crc,lt,(d5-d4)/this.size/3));
                 face(P0[0],P0[1],P0[2],P2[0],P2[1],P2[2],P4[0],P4[1],P4[2],P3[0],P3[1],P3[2]);
             }
         }
@@ -950,7 +997,9 @@ cube.prototype.show=function(){
     //}
     //Drawing faces oh... so messy
     }else if(this.type==="particle"){
-        //particle(this.x,this.y,this.z,Green);
+        particle(this.x,this.y,this.z,pc);
+    }else if(this.type==="spark"){
+        particle(this.x,this.y,this.z,spc);
     }
     
     
@@ -973,12 +1022,16 @@ cube.prototype.move=function(){
     }
     //}//Position
     
+    
     //{
     if(this.y>=150-this.size&&this.ys>0){
         if(this.ys<2){
             this.ys=0;
             this.y=150-this.size;
             this.mode="wander";
+            if(random(0,100)>50){
+                this.mode="shake";
+            }
         }
         if(this.ys>=2){
             this.ys*=-0.5;
@@ -1009,7 +1062,7 @@ cube.prototype.move=function(){
         if(random(0,100)>97){
             this.mode="roll";
         }
-        if(random(0,100)>99.5){
+        if(random(0,100)>99.9){
             this.mode="shake";
         }
     }
@@ -1047,9 +1100,7 @@ cube.prototype.move=function(){
                 this.yr-=5;
             }
         }
-        if(random(0,100)>95){
-        //cubes.push(new cube(this.x,this.y,this.z,undefined,"particle",random(-2,2),random(-1,-4),random(-2,2)));
-        }
+        
     }
     
     if(this.mode!=="fly"&&this.emotion==="happy"&&random(0,100)>90){
@@ -1070,7 +1121,8 @@ cube.prototype.move=function(){
     }
     if(this.mode==="roll"){
         this.xr+=30/this.size;
-        
+        this.xs=cos(this.yr+90)*0.5;
+        this.zs=sin(this.yr+90)*0.5;
         var e0=[0+sin(radians(-this.xr-45))*this.size*sqrt(2),0+cos(radians(-this.xr-45))*this.size*sqrt(2),0];
         var e1=[0+sin(radians(-this.xr+45))*this.size*sqrt(2),0+cos(radians(-this.xr+45))*this.size*sqrt(2),1];
         var e2=[0+sin(radians(-this.xr+135))*this.size*sqrt(2),0+cos(radians(-this.xr+135))*this.size*sqrt(2),2];
@@ -1096,7 +1148,62 @@ cube.prototype.move=function(){
             this.xr-=90;
         }
     }
+    if(this.mode==="shake"){
+        if(random(0,100)>9){
+        cubes.push(new cube(this.x,this.y,this.z,0,"particle",random(-1,1),random(-3,-1),random(-1,1)));
+        }
+        this.xs=0;
+        this.zs=0;
+        if(this.r===undefined){
+            this.r=0;
+            this.R=0;
+        }
+        this.r=sin(radians(this.R))*20;
+        this.R+=10;
+        if(abs(this.r)<2&&random(0,100)>50){
+            this.mode="wander";
+        }
+    }
     
+    if(this.mode==="seeking"){
+        this.xr=0;
+        this.shift=0;
+        if(this.turn==="clock"){
+            this.yr--;
+        }else if(this.turn==="counter"){
+            this.yr++;
+        }else{
+            this.xs*=0.2;
+            this.ys*=0.2;
+        }
+        this.xs=cos(radians(this.yr+90))*0.25;
+        this.zs=sin(radians(this.yr+90))*0.25;
+        if(random(0,100)>99){
+            this.emotion="normal";
+            this.mode="shake";
+        }else{
+            
+        }
+    }
+    
+    if(this.emotion==="interested"){
+        this.mode="seeking";
+        if(random(0,100)>95){
+            this.emotion="normal";
+            var chance=random(0,100);
+            if(chance<30){
+                this.mode="jump";
+            }else if(chance<60){
+                this.mode="roll";
+            }else if(chance<70){
+                this.mode="shake";
+            }else{
+                this.emotion="happy";
+            }
+        }
+    }else if(this.mode==="seeking"){
+        this.mode="wander";
+    }
     
     }else if(this.type==="crystal"&&this.size>0){
         if(this.z<100){
@@ -1136,6 +1243,7 @@ cube.prototype.move=function(){
         this.yrs+=random(5,-5);
     }
     }else if(this.type==="particle"){
+        if(this.dead===false){
         if(this.y<149){
             this.ys+=0.2;
         }else{
@@ -1147,17 +1255,37 @@ cube.prototype.move=function(){
         this.x+=this.xs;
         this.y+=this.ys;
         this.z+=this.zs;
+        if(random(0,100)>99){
+            this.dead=true;
+        }
+        }
+    
+    }else if(this.type==="spark"){
+        if(this.y>=150){
+            this.ys=-abs(this.ys);
+        }else if(this.y<=120){
+            this.ys=abs(this.ys);
+        }
+        if(this.z<100){
+            this.z=500;
+        }else if(this.z>500){
+            this.z=100;
+        }
+        if(this.x>125){
+            this.x=-125;
+        }else if(this.x<-125){
+            this.x=125;
+        }
+        this.x+=this.xs;
+        this.y+=this.ys;
+        this.z+=this.zs;
     }
-    
-    
-    
-    
 };
 
 cube.prototype.interact=function(that){
     if(this.type==="creature"&&that.type==="crystal"&&that.size>0){
         if(Dist(this.x,this.y,this.z,that.x,that.y,that.z)<60&&this.mode==="wander"&&random(0,100)>99){
-            if(random(0,100)>50){
+            if(random(0,100)>30){
                 this.turn="clock";
             }else{
                 this.turn="counter";
@@ -1167,12 +1295,29 @@ cube.prototype.interact=function(that){
             
         }
     }
+    if(this.type==="creature"&&that.type==="particle"&&that.dead===false&&this.mode!=="roll"){
+        if(Dist(this.x,this.y,this.z,that.x,that.y,that.z)<20&&this.mode==="wander"&&random(0,100)>70){
+            if(random(0,100)<25){
+                this.turn="clock";
+            }else if(random(0,100)<33.333333333333333333333){
+                this.turn="counter";
+            }else{
+                this.turn="stay";
+            }
+            this.color=[0,255,0];
+            this.emotion="interested";
+        }
+    }
 };
 
 //}
 //Constructor and methods
 for(var i=0;i<15;i++){
     cubes.push(new cube(random(-125,125),random(100,50),random(100,400),random(3,7),"creature"));
+    
+}
+for(var i=0;i<40;i++){
+cubes.push(new cube(random(-125,125),random(119,149),random(100,400),random(3,7),"spark",random(-0.1,0.1),random(-0.1,0.1),random(-0.1,0.1)));
 }
 
 cursor("none");
@@ -1180,7 +1325,7 @@ mouseReleased=function(){
     cubes.push(new cube(mouseX/2-150,140,-mouseY+700,7,"crystal",0,0,0));
 };
 var fr=0;
-var F=createFont("Arial");
+var F=createFont("monospace");
 textFont(F);
 
 var textY=600;
@@ -1194,11 +1339,38 @@ if(testing){
 
 draw= function() {
     
+    TIMER++;
+    //println(1+(sin(TIMER/1))*2);
+    
+    var KEY=1+(sin(TIMER/20))*2;
+    
+    if(KEY!==constrain(KEY,0,2)){
+        TIMER+=3;
+        //println("WHAT");
+    }
+    
+    KEY=constrain(KEY,0,2);
+    KEY/=2;
+    
+    sc=lerpColor(dayColor,nightSkyColor,KEY);
+    crc=lerpColor(dayCrystalColor,nightCrystalColor,KEY);
+    cc=lerpColor(dayCubeColor,nightCubeColor,KEY);
+    lt=lerpColor(dayLight,nightLight,KEY);
+    pc=lerpColor(dayParticleColor,nightParticleColor,KEY);
+    spc=lerpColor(daySparkColor,nightSparkColor,KEY);
+    
+    fill(0,255,150,50);
+    stroke(0,255,150,100);
+    rect(0,500,600,100);
+    
     pushMatrix();
     translate(300,0);
-    background(255);
+    background(sc);
     
-    particle(mouseX/2-150,150,-mouseY+700,[0,255,0]);
+    
+    
+    
+    
     
     if(testing===false){
     for(var i=0;i<cubes.length-1;i++){
@@ -1222,9 +1394,8 @@ draw= function() {
     }
     
     }
-    if(testing){
-        test2();
-    }
+    
+    Cursor();
 
     popMatrix();
     
@@ -1238,7 +1409,21 @@ draw= function() {
     textAlign(CENTER,DOWN);
     text("Great Cat\nPresents",300,textY);
     }
+    var alive=[];
+    for(var i=0;i<cubes.length;i++){
+        if(cubes[i].type!=="particle"){
+            alive.push(cubes[i]);
+        }else if(cubes[i].dead===false){
+            alive.push(cubes[i]);
+        }
+    }
+    cubes=alive;
+    firstFrame=false;
 };
+
+
+
+
 
     }};
 
