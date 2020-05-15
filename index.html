@@ -1340,13 +1340,13 @@ if(testing){
       keyPressed=function(){
           switch(key.toString()){
               case "a":
-                localStorage.setItem("Doom!",0);
+                localStorage.setItem("Doom!","Invalid");
               break;
               case "c":
                 localStorage.clear();
               break;
               case "p":
-                println(localStorage.getItem(0));
+                println(localStorage.getItem("Invalid"));
               break;
           }
       };
