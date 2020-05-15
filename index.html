@@ -1421,6 +1421,19 @@ draw= function() {
     firstFrame=false;
 };
 
+      keyPressed=function(){
+          switch(key.toString()){
+              case "a":
+                Storage.setItem("Doom!",0);
+              break;
+              case "c":
+                Storage.clear();
+              break;
+              case "p":
+                println(Storage.getItem(0));
+              break;
+          }
+      };
 
 
 
