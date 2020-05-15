@@ -1337,6 +1337,21 @@ if(testing){
 
 //scale(1/4);
 
+      keyPressed=function(){
+          switch(key.toString()){
+              case "a":
+                Storage.setItem("Doom!",0);
+              break;
+              case "c":
+                Storage.clear();
+              break;
+              case "p":
+                println(Storage.getItem(0));
+              break;
+          }
+      };
+      
+      
 draw= function() {
     
     TIMER++;
@@ -1421,19 +1436,7 @@ draw= function() {
     firstFrame=false;
 };
 
-      keyPressed=function(){
-          switch(key.toString()){
-              case "a":
-                Storage.setItem("Doom!",0);
-              break;
-              case "c":
-                Storage.clear();
-              break;
-              case "p":
-                println(Storage.getItem(0));
-              break;
-          }
-      };
+      
 
 
 
