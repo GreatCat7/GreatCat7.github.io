@@ -1340,13 +1340,13 @@ if(testing){
       keyPressed=function(){
           switch(key.toString()){
               case "a":
-                Storage.setItem("Doom!",0);
+                localStorage.setItem("Doom!",0);
               break;
               case "c":
-                Storage.clear();
+                localStorage.clear();
               break;
               case "p":
-                println(Storage.getItem(0));
+                println(localStorage.getItem(0));
               break;
           }
       };
