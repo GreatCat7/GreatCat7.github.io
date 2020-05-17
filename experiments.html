@@ -4,8 +4,11 @@
   <script src="processinglibrary.js"></script>
   <script>
     
+    console.log(localStorage.length);
+    console.log("^Print the length of the ^");
+    console.log("______________________________");
     
-    
+    if(localStorage.length>0){
     localStorage.getItem("Nonsense").mumble();
     console.log("^Whether the thing can still mumble after reloading page^");
     console.log("______________________________");
@@ -13,7 +16,7 @@
     console.log([localStorage.getItem("Nonsense").par1,localStorage.getItem("Nonsense").par2,localStorage.getItem("Nonsense").par3,localStorage.getItem("Nonsense").par4,localStorage.getItem("Nonsense").par5]);
     console.log("^Did you lose any information^");
     console.log("______________________________");
-    
+    }
     
     
     
