@@ -1,4 +1,46 @@
 <!DOCTYPE html>
-
-<script src="processinglibrary.js"></script>
-<script src="main.js"></script>
+<head></head>
+<body>
+  <script src="processinglibrary.js"></script>
+  <script>
+    
+    
+    
+    localStorage.getItem("Nonsense").mumble();
+    console.log("^Whether the thing can still mumble after reloading page^");
+    console.log("______________________________");
+    
+    console.log([localStorage.getItem("Nonsense").par1,localStorage.getItem("Nonsense").par2,localStorage.getItem("Nonsense").par3,localStorage.getItem("Nonsense").par4,localStorage.getItem("Nonsense").par5]);
+    console.log("^Did you lose any information^");
+    console.log("______________________________");
+    
+    
+    
+    
+    var Obj={
+      par1:45,
+      par2:20,
+      par3:100,
+      par4:80,
+      par5:0,
+      }
+    Obj.mumble=function(){
+      console.log("From Obj: Hey! Who are you!?");
+    };
+    
+    
+    Obj.mumble();
+    console.log("^Testing the Obj.mumble method^");
+    console.log("______________________________");
+    console.log(Obj);
+    console.log("^See if the browser knows Obj is here^");
+    console.log("______________________________");
+    localStorage.setItem("Nonsense",Obj);
+    console.log(localStorage.getItem("Nonsense"));
+    console.log("^See if the browser stores Obj in the storage^");
+    console.log("______________________________");
+    localStorage.getItem("Nonsense").mumble();
+    console.log("^Whether the thing can still mumble^");
+    console.log("______________________________");
+  </script>
+</body>
